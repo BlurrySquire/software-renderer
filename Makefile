@@ -36,4 +36,4 @@ $(TARGET): $(OBJECTS)
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(C_FLAGS) -c $< -o $@
+	$(CC) $(C_FLAGS_BASE) $(C_FLAGS) -c $< -o $@
