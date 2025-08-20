@@ -1,6 +1,6 @@
 #include "platform/platform.h"
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
+int main() {
     platform_init();
 
     while (platform_process_events()) {
