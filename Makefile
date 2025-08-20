@@ -5,15 +5,20 @@ C_FLAGS_BASE := -Wall -Wextra -std=gnu11 -I$(SOURCE_DIR)
 
 ifeq ($(platform),x11)
 CC := gcc
+LD := gcc
 
 C_FLAGS   := -DPLATFORM_X11
 LD_FLAGS  := -lX11
 
 else ifeq ($(platform),redactedos)
 CC := aarch64-elf-gcc
+LD := aarch64-elf-ld
 
-C_FLAGS   := -DPLATFORM_REDACTEDOS
-LD_FLAGS  := -lshared
+C_FLAGS   := -ffreestanding -nostdlib \
+	-fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables \
+	-g -O0 -mcpu=cortex-a72 \
+	-DPLATFORM_REDACTEDOS -Ishared
+LD_FLAGS  := -T redactedos.ld -nostdlib shared/libshared.a
 
 endif
 
@@ -32,7 +37,7 @@ clean:
 
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(dir $@)
-	$(CXX) $(LD_FLAGS) $(OBJECTS) -o $(TARGET)
+	$(LD) $(LD_FLAGS) $(OBJECTS) -o $(TARGET)
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	@mkdir -p $(dir $@)
